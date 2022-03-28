@@ -7,6 +7,8 @@ from django.contrib import messages
 from .forms import NewUserForm, NewUserFormInfo
 from django.contrib.auth import login, authenticate
 
+from utils.pic_working import watermark_text
+
 def index(request):
     res = []
     for data in list(Client.objects.all()):
@@ -50,7 +52,14 @@ def auth_info(request):
         if form.is_valid():
             client = form.save(commit=False)
             client.user = request.user
+            pic = request.FILES['photo']
             client.save()
+
+            watermark_text('/Users/rodionibragimov/Documents/DatingSite/dating_django/images/{}'.format(pic),
+                           '/Users/rodionibragimov/Documents/DatingSite/dating_django/images/{}'.format(pic),
+                           text='DatingSite',
+                           pos=(0, 0))
+
             messages.success(request, 'Registration info successful.')
             return redirect('https://www.speedtest.net/')
         else:
