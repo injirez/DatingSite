@@ -1,6 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import  render, redirect
 from .models import Client
+from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
@@ -8,6 +9,7 @@ from .forms import NewUserForm, NewUserFormInfo
 from django.contrib.auth import login, authenticate
 
 from utils.pic_working import watermark_text
+from utils.send_email import send_email
 
 def index(request):
     res = []
@@ -55,8 +57,7 @@ def auth_info(request):
             pic = request.FILES['photo']
             client.save()
 
-            watermark_text('/Users/rodionibragimov/Documents/DatingSite/dating_django/images/{}'.format(pic),
-                           '/Users/rodionibragimov/Documents/DatingSite/dating_django/images/{}'.format(pic),
+            watermark_text(input_image_path='/Users/rodionibragimov/Documents/DatingSite/dating_django/clients/static/clients/media/{}'.format(pic),
                            text='DatingSite',
                            pos=(0, 0))
 
@@ -67,3 +68,57 @@ def auth_info(request):
     form = NewUserFormInfo()
 
     return render(request=request, template_name='info.html', context={'form': form})
+
+
+def match(request, user_id):
+    if request.method == 'GET':
+        data = Client.objects.get(pk=user_id)
+        photo = data.photo.name[15:]
+        context = {
+            'username': data.user.username,
+            'name': data.name,
+            'surname': data.surname,
+            'gender': data.gender,
+            'email': data.email,
+            'photo': photo,
+        }
+    return render(request=request, template_name='match.html', context=context)
+
+def set_like(request, user_id):
+    data = Client.objects.get(pk=user_id)
+
+    user = Client.objects.get(pk=user_id)
+    user_pk = user.user.pk
+
+    viewer = Client.objects.get(user=User.objects.get(pk=request.user.pk))
+    viewer.liked_users.add(user_pk)
+
+    for liked_user in list(data.liked_users.all()):
+        if str(request.user.username) == str(liked_user):
+            print('{} and {} love each other'.format(request.user.username, data.user))
+
+            send_email(receiver_email=str(data.email),
+                       message='Subject: Dating site \n\n {} likes you! Email of user: {}'.format(str(request.user.username), viewer.email))
+            send_email(receiver_email=str(viewer.email),
+                       message='Subject: Dating site \n\n {} likes you! Email of user: {}'.format(str(data.user.username), data.email))
+
+    try:
+        Client.objects.get(pk=user_id+1)
+        return HttpResponseRedirect('http://127.0.0.1:8000/api/clients/{}/match/'.format(user_id+1))
+    except:
+        return HttpResponse('Exception: Data Not Found')
+
+    return HttpResponseRedirect('https://www.speedtest.net/')
+
+
+
+
+def set_dislike(request, user_id):
+
+    try:
+        Client.objects.get(pk=user_id + 1)
+        return HttpResponseRedirect('http://127.0.0.1:8000/api/clients/{}/match/'.format(user_id + 1))
+    except:
+        return HttpResponse('Exception: Data Not Found')
+
+    return HttpResponseRedirect('https://www.speedtest.net/')

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="card" style="margin: auto;width: 50%;padding: 10px;text-align: center;">
+      <img class="card-img-top" src="{% static photo %}" style="width:300px;height:500px;">
+      <div class="card-body">
+        <h5 class="card-title">{{ name }} {{ surname }}</h5>
+        <p class="card-text">@{{ username }}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ gender }}</li>
+        <li class="list-group-item">{{ email }}</li>
+      </ul>
+      <div class="card-body">
+
+        <form action="like/" method="POST">
+            {% csrf_token %}
+                <button class="btn btn-primary">Like</button>
+        </form>
+
+          <form action="dislike/" method="POST">
+            {% csrf_token %}
+                <button class="btn btn-primary">Dislike</button>
+        </form>
+
+      </div>
+    </div>
+
+</body>
+</html>
