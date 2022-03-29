@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import  render, redirect
 from .models import Client
+from .filters import UsersFilter
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -111,8 +112,6 @@ def set_like(request, user_id):
     return HttpResponseRedirect('https://www.speedtest.net/')
 
 
-
-
 def set_dislike(request, user_id):
 
     try:
@@ -122,3 +121,11 @@ def set_dislike(request, user_id):
         return HttpResponse('Exception: Data Not Found')
 
     return HttpResponseRedirect('https://www.speedtest.net/')
+
+def users_list(request):
+    if request.method == 'GET':
+        users = UsersFilter(request.GET, queryset=Client.objects.all())
+
+
+    return render(request=request, template_name='list.html', context={'filter': users})
+

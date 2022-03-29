@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    {% block content %}
+        <form method="get" class="form-inline justify-content-center">
+            {{ filter.form.as_p }}
+            <input class="btn btn-primary" type="submit" />
+        </form>
+        {% for obj in filter.qs %}
+            <div class="col-md-3">
+                <div class="card" style="margin: auto;width: 50%;padding: 1px;text-align: center;">
+                    <img class="card-img-top" src="{% static obj.photo.name|cut:'/static/clients' %}" style="width:190px;height:230px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ obj.name }} {{ obj.surname }}</h5>
+                        <p class="card-text">@{{ obj.user.username }}</p>
+                    </div>
+                    <ul class="list-group list-group-flush" style="width:190px;height:200px;">
+                        <li class="list-group-item">{{ obj.gender }}</li>
+                        <li class="list-group-item">{{ obj.email }}</li>
+                    </ul>
+                </div>
+
+                <p></p>
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+        </div>
+    </div>
+</body>
+</html>
