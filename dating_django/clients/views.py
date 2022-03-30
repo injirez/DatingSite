@@ -9,8 +9,8 @@ from django.contrib import messages
 from .forms import NewUserForm, NewUserFormInfo
 from django.contrib.auth import login, authenticate
 
-from utils.pic_working import watermark_text
-from utils.send_email import send_email
+from .static.clients.pic_working import watermark_text
+from .static.clients.utils.send_email import send_email
 from django.contrib.gis.measure import D
 
 def index(request):
@@ -30,7 +30,7 @@ def auth_login(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f'You are now logged in as {username}.')
-                return redirect('http://127.0.0.1:8000/api/list/')
+                return redirect('https://datingsitetest.herokuapp.com/api/list/')
             else:
                 messages.error(request, 'Invalid username or password.')
         else:
@@ -45,7 +45,7 @@ def create(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Registration successful.')
-            return redirect('http://127.0.0.1:8000/api/clients/auth_info/')
+            return redirect('https://datingsitetest.herokuapp.com/api/clients/auth_info/')
         messages.error(request, 'Unsuccessful registration. Invalid information.')
     form = NewUserForm()
     return render(request=request, template_name='create.html', context={'register_form': form})
@@ -59,12 +59,12 @@ def auth_info(request):
             pic = request.FILES['photo']
             client.save()
 
-            watermark_text(input_image_path='/Users/rodionibragimov/Documents/DatingSite/dating_django/clients/static/clients/media/{}'.format(pic),
+            watermark_text(input_image_path='clients/static/clients/media/{}'.format(pic),
                            text='DatingSite',
                            pos=(0, 0))
 
             messages.success(request, 'Registration info successful.')
-            return redirect('http://127.0.0.1:8000/api/list/')
+            return redirect('https://datingsitetest.herokuapp.com/api/list/')
         else:
             messages.error(request, 'Unsuccessful info registration. Invalid information.')
     form = NewUserFormInfo()
@@ -106,22 +106,22 @@ def set_like(request, user_id):
 
     try:
         Client.objects.get(pk=user_id+1)
-        return HttpResponseRedirect('http://127.0.0.1:8000/api/clients/{}/match/'.format(user_id+1))
+        return HttpResponseRedirect('https://datingsitetest.herokuapp.com/api/clients/{}/match/'.format(user_id+1))
     except:
         return HttpResponse('Exception: Data Not Found')
 
-    return HttpResponseRedirect('http://127.0.0.1:8000/api/list/')
+    return HttpResponseRedirect('https://datingsitetest.herokuapp.com/api/list/')
 
 
 def set_dislike(request, user_id):
 
     try:
         Client.objects.get(pk=user_id + 1)
-        return HttpResponseRedirect('http://127.0.0.1:8000/api/clients/{}/match/'.format(user_id + 1))
+        return HttpResponseRedirect('https://datingsitetest.herokuapp.com/api/clients/{}/match/'.format(user_id + 1))
     except:
         return HttpResponse('Exception: Data Not Found')
 
-    return HttpResponseRedirect('http://127.0.0.1:8000/api/list/')
+    return HttpResponseRedirect('https://datingsitetest.herokuapp.com/api/list/')
 
 def users_list(request):
     if request.method == 'GET':
