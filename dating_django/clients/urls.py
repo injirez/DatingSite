@@ -9,5 +9,6 @@ urlpatterns = [
     path ('clients/<int:user_id>/match/', views.match),
     path ('clients/<int:user_id>/match/like/', views.set_like),
     path ('clients/<int:user_id>/match/dislike/', views.set_dislike),
-    path('list/', views.users_list)
+    path('list/', views.users_list),
+    path('distance/<int:distance>', views.list_distance)
 ]

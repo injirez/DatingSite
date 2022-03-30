@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'crispy_forms',
     'django_filters',
     'clients',
@@ -79,11 +80,12 @@ WSGI_APPLICATION = 'dating_django.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'daiting_site',
-        'HOST': 'localhost',
-        'USER': 'postgres',
-        'PASSWORD': '3470',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'd1l36evhfse29b',
+        'HOST': 'ec2-52-212-228-71.eu-west-1.compute.amazonaws.com',
+        'USER': 'tqjqelenxvfnsg',
+        'PASSWORD': '6505c647dadb898ea8c45b890c0d7f03750764e18371889de0efe0c17040a292',
         'PORT': '5432'
     }
 }

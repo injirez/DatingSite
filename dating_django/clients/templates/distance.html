@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    {% block content %}
+    <div>
+        <a href="http://127.0.0.1:8000/api/distance/1" class="btn btn-info" role="button">1 km</a>
+        <a href="http://127.0.0.1:8000/api/distance/10" class="btn btn-info" role="button">10 km</a>
+        <a href="http://127.0.0.1:8000/api/distance/100" class="btn btn-info" role="button">100 km</a>
+        <a href="http://127.0.0.1:8000/api/distance/1000" class="btn btn-info" role="button">1000 km</a>
+        <a href="http://127.0.0.1:8000/api/distance/1000000" class="btn btn-info" role="button">All</a>
+    </div>
+    <p></p>
+        {% for item in items %}
+            <div class="col-md-3">
+                <div class="card" style="margin: auto;width: 50%;padding: 1px;text-align: center;">
+                    <img class="card-img-top" src="{% static item.5|cut:'/static/clients' %}" style="width:190px;height:230px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.1 }} {{ item.2 }}</h5>
+                        <p class="card-text">@{{ item.0 }}</p>
+                    </div>
+                    <ul class="list-group list-group-flush" style="width:190px;height:200px;">
+                        <li class="list-group-item">{{ item.3 }}</li>
+                        <li class="list-group-item">{{ item.4 }}</li>
+                    </ul>
+                </div>
+
+                <p></p>
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+        </div>
+    </div>
+</body>
+</html>

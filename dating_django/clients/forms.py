@@ -22,4 +22,4 @@ class NewUserFormInfo(forms.ModelForm):
 
 	class Meta:
 		model = Client
-		fields = ('name', 'surname', 'gender', 'email', 'photo')
+		fields = ('name', 'surname', 'gender', 'email', 'photo', 'location')

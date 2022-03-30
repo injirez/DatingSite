@@ -11,6 +11,7 @@ from django.contrib.auth import login, authenticate
 
 from utils.pic_working import watermark_text
 from utils.send_email import send_email
+from django.contrib.gis.measure import D
 
 def index(request):
     res = []
@@ -29,7 +30,7 @@ def auth_login(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f'You are now logged in as {username}.')
-                return redirect('https://www.speedtest.net/')
+                return redirect('http://127.0.0.1:8000/api/list/')
             else:
                 messages.error(request, 'Invalid username or password.')
         else:
@@ -63,7 +64,7 @@ def auth_info(request):
                            pos=(0, 0))
 
             messages.success(request, 'Registration info successful.')
-            return redirect('https://www.speedtest.net/')
+            return redirect('http://127.0.0.1:8000/api/list/')
         else:
             messages.error(request, 'Unsuccessful info registration. Invalid information.')
     form = NewUserFormInfo()
@@ -109,7 +110,7 @@ def set_like(request, user_id):
     except:
         return HttpResponse('Exception: Data Not Found')
 
-    return HttpResponseRedirect('https://www.speedtest.net/')
+    return HttpResponseRedirect('http://127.0.0.1:8000/api/list/')
 
 
 def set_dislike(request, user_id):
@@ -120,7 +121,7 @@ def set_dislike(request, user_id):
     except:
         return HttpResponse('Exception: Data Not Found')
 
-    return HttpResponseRedirect('https://www.speedtest.net/')
+    return HttpResponseRedirect('http://127.0.0.1:8000/api/list/')
 
 def users_list(request):
     if request.method == 'GET':
@@ -128,4 +129,24 @@ def users_list(request):
 
 
     return render(request=request, template_name='list.html', context={'filter': users})
+
+def list_distance(request, distance):
+    if request.method == 'GET':
+        user_profile = Client.objects.first()
+        items = []
+        res = Client.objects.filter(location__distance_lte=(user_profile.location, D(km=distance)))
+        for client in res:
+            item = []
+            item.append(client.user.username)
+            item.append(client.name)
+            item.append(client.surname)
+            item.append(client.gender)
+            item.append(client.email)
+            item.append(client.photo.name)
+            items.append(item)
+
+        context = {
+            'items': items,
+        }
+    return render(request=request, template_name='distance.html', context=context)
 
